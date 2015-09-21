@@ -9,20 +9,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 
 	"./slack"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "usage: slackbot slack-bot-token\n")
-		os.Exit(1)
-	}
-
-	// start a websocket-based Real Time API session
-	ws, id := slack.Connect(os.Args[1])
+	// @TODO set token from config/ENV
+	ws, id := slack.Connect("xoxb-11040115536-GbFpGqoTyaTV67JSEABys4rv")
 	fmt.Println("bot ready, ^C exits")
 
 	for {
