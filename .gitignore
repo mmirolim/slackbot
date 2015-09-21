@@ -1,0 +1,12 @@
+*.sw*
+*.orig
+*.log
+*~
+*.*~
+*.*#
+*.#*
+*.test
+*.cpu
+*.mem
+main
+bot
