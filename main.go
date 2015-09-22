@@ -9,8 +9,8 @@ import (
 	"log"
 	"strings"
 
-	ci "github.com/mmirolim/slack-bot/ci-gitlab"
-	"github.com/mmirolim/slack-bot/slack"
+	ci "./ci-gitlab"
+	"./slack"
 )
 
 var (
