@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"sync"
 )
 
@@ -17,6 +17,9 @@ const (
 )
 
 var (
+	// domain
+	apiHost = ""
+	// part or url
 	apiUrl   = ""
 	apiToken = ""
 	once     sync.Once
@@ -31,25 +34,37 @@ var (
 )
 
 type Resp struct {
-	Commit
+	Commit `json:"commit"`
 }
 
 type Commit struct {
 	Ref    string
 	Sha    string
-	ProjID string `json:"project_id"`
+	ProjID int    `json:"project_id"`
 	GitMsg string `json:"git_commit_message"`
 }
 
-func (c *Commit) Stringer() string {
-	return fmt.Sprintf("project id: %s commit msg: %s ref: %s sha: %s", c.ProjID, c.GitMsg, c.Sha)
+// implement Stringer interface
+func (r *Resp) String() string {
+	var obj string
+	obj = fmt.Sprintf("obj empty %v", r)
+	// check if not empty
+	if len(r.Sha) < 7 {
+		return obj
+	}
+	pid := strconv.Itoa(r.ProjID)
+
+	// ci specific
+	link := apiHost + "/projects/" + pid + "/refs/" + r.Ref + "/commits/" + r.Sha
+	return fmt.Sprintf("project-id: %d commit-msg: %s ref: %s %s", r.ProjID, r.GitMsg, r.Ref, link)
 }
 
 //@TODO start goroute per project
-func Configure(url, token string) {
+func Configure(host, api, token string) {
 	// protect from race
 	once.Do(func() {
-		apiUrl = url
+		apiHost = host
+		apiUrl = api
 		apiToken = token
 	})
 }
@@ -79,15 +94,13 @@ func req(proj, ref string) (Resp, error) {
 	}
 	// construct project and branch specific url
 	fullUrl := apiUrl + "/projects/" + id + "/refs/" + ref + "/trigger"
-	// send post form with token
 	v := url.Values{}
-	v.Set("token", apiToken)
-	log.Println("values", v, "fullurl", fullUrl)
+	v.Set("token", "2df1de069095cfda2edde54d57ebbe")
 	resp, err := http.PostForm(fullUrl, v)
-
-	//	if resp.StatusCode != http.StatusOK {
-	//		return ciResp, ErrReq
-	//	}
+	// if ok http result is 201
+	if resp.StatusCode != http.StatusCreated {
+		return ciResp, ErrReq
+	}
 
 	data, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
@@ -97,6 +110,5 @@ func req(proj, ref string) (Resp, error) {
 	}
 	// unmarshal object
 	err = json.Unmarshal(data, &ciResp)
-	log.Printf("resp %#v, body %#v", resp, ciResp)
 	return ciResp, err
 }

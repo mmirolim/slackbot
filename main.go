@@ -28,7 +28,7 @@ func main() {
 
 	fmt.Printf("bot ready, build version: %s", BuildVersion)
 	// configure ci gitlab conf
-	ci.Configure("https://gitlab-ci.regium.com/api/v1", "2df1de069095cfda2edde54d57ebbe")
+	ci.Configure("https://gitlab-ci.regium.com", "https://gitlab-ci.regium.com/api/v1", "2df1de069095cfda2edde54d57ebbe")
 	// start listening to messages
 	for {
 		// read each incoming message
@@ -52,7 +52,7 @@ func main() {
 						log.Println("could not trigger ci work", err)
 					} else {
 						// format response
-						m.Text = fmt.Sprintf("%s", resp.Commit)
+						m.Text = resp.String()
 					}
 					// send msg to slack
 					if err := slack.PostMsg(ws, m); err != nil {
