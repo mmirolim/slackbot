@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"strings"
 
-	"./slack"
+	"github.com/mmirolim/slack-bot/slack"
 )
 
 func main() {
