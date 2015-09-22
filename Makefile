@@ -12,7 +12,7 @@ FORMAT = v$(VER)-$(COMMIT)-$(TIMESTM)
 
 pack: info build
 # build docker image from default Dockerfile and tag it
-	docker build -t slack-bot:$(VER) .
+	sudo docker build -t slack-bot:$(VER) .
 
 build: info
 # set binary name and build version into it
