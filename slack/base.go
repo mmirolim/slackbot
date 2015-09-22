@@ -1,5 +1,6 @@
 /*
-Slack bot for automatization purposes
+Slack sevice communication package
+auth, connecting, sending and receiving
 */
 
 package slack
@@ -8,11 +9,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sync/atomic"
 
 	"golang.org/x/net/websocket"
+)
+
+const (
+	SLACK_API_URL     = "https://api.slack.com/"
+	SLACK_API_RTM_URL = "https://slack.com/api/rtm.start"
 )
 
 // These two structures represent the response of the Slack API rtm.start.
@@ -29,10 +34,10 @@ type RespSelf struct {
 	Id string `json:"id"`
 }
 
-// slackStart does a rtm.start, and returns a websocket URL and user ID. The
+// start does a rtm.start, and returns a websocket URL and user ID. The
 // websocket URL can be used to initiate an RTM session.
-func Start(token string) (wsurl, id string, err error) {
-	url := fmt.Sprintf("https://slack.com/api/rtm.start?token=%s", token)
+func start(token string) (wsurl, id string, err error) {
+	url := fmt.Sprintf(SLACK_API_RTM_URL+"?token=%s", token)
 	resp, err := http.Get(url)
 	if err != nil {
 		return
@@ -42,7 +47,6 @@ func Start(token string) (wsurl, id string, err error) {
 		return
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
 	if err != nil {
 		return
 	}
@@ -73,13 +77,18 @@ type Msg struct {
 	Text    string `json:"text"`
 }
 
+// get slack msg object unmarshaled from active websocket connection or return error
 func GetMsg(ws *websocket.Conn) (m Msg, err error) {
 	err = websocket.JSON.Receive(ws, &m)
 	return
 }
 
+// counter will increment msg id
+// should be protected by concurrent use
+// with atomic or mutex
 var counter uint64
 
+// send slack message object to active websocket connection or return error
 func PostMsg(ws *websocket.Conn, m Msg) error {
 	m.Id = atomic.AddUint64(&counter, 1)
 	return websocket.JSON.Send(ws, m)
@@ -87,16 +96,16 @@ func PostMsg(ws *websocket.Conn, m Msg) error {
 
 // Starts a websocket-based Real Time API session and return the websocket
 // and the ID of the (bot-)user whom the token belongs to.
-func Connect(token string) (*websocket.Conn, string) {
-	wsurl, id, err := Start(token)
+func Connect(token string) (*websocket.Conn, string, error) {
+	wsurl, id, err := start(token)
 	if err != nil {
-		log.Fatal(err)
+		return nil, "", err
 	}
 
-	ws, err := websocket.Dial(wsurl, "", "https://api.slack.com/")
+	ws, err := websocket.Dial(wsurl, "", SLACK_API_URL)
 	if err != nil {
-		log.Fatal(err)
+		return nil, "", err
 	}
 
-	return ws, id
+	return ws, id, err
 }
