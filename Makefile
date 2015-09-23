@@ -2,7 +2,7 @@
 # binary name
 BIN = bot
 # get current branch
-BR = `git rev-parse --abbrev-ref HEAD`
+BR = `git name-rev --name-only HEAD`
 # set build version from nearest git tag
 VER = `git describe --tags --abbrev=0`
 # set commit short
