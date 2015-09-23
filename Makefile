@@ -10,13 +10,18 @@ TIMESTM = `date -u '+%Y-%m-%d_%H:%M:%S%p'`
 # format version signature
 FORMAT = v$(VER)-$(COMMIT)-$(TIMESTM)
 
+# @TODO change to ci, testing with local version
+deploy: pack
+	docker tag slackbot:$(VER) tutum.co/mmirolim/slackbot:$(VER)
+	docker push tutum.co/mmirolim/slackbot:$(VER)
+
 pack: info build
 # build docker image from default Dockerfile and tag it
-	sudo docker build -t slack-bot:$(VER) .
+	sudo docker build -t slackbot:$(VER) .
 
 build: info
 # set binary name and build version into it
-	godep go build -o $(BIN) -ldflags "-X main.BuildVersion=$(FORMAT)"
+	CGO_ENABLED=0 godep go build -o $(BIN) -ldflags "-X main.BuildVersion=$(FORMAT)"
 info:
 	go version
 # rm test files binary and out files
