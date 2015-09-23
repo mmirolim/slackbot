@@ -1,5 +1,13 @@
+clean: 
+  script: make clean
+
 pack:
   script: make pack
+
+staging:
+  script: make deploy-tutum
+  only:
+    - dev
 
 deploy:
   script: make deploy

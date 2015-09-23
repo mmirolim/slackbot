@@ -1,23 +1,26 @@
 # simple makefile to test and build
 # binary name
 BIN = bot
+# get current branch
+BR = `git rev-parse --abbrev-ref HEAD`
 # set build version from nearest git tag
-VER =`git describe --tags --abbrev=0`
+VER = `git describe --tags --abbrev=0`
 # set commit short
 COMMIT =`git rev-parse --short HEAD`
 # set build time
 TIMESTM = `date -u '+%Y-%m-%d_%H:%M:%S%p'`
 # format version signature
 FORMAT = v$(VER)-$(COMMIT)-$(TIMESTM)
-
+# docker tag version
+DOCTAG = $(VER)-$(BR)
 # @TODO change to ci, testing with local version
 deploy-tutum: pack
-	docker tag slackbot:$(VER) tutum.co/mmirolim/slackbot:$(VER)
-	docker push tutum.co/mmirolim/slackbot:$(VER)
+	docker tag slackbot:$(DOCTAG) tutum.co/mmirolim/slackbot:$(DOCTAG)
+	docker push tutum.co/mmirolim/slackbot:$(DOCTAG)
 
 pack: info build
 # build docker image from default Dockerfile and tag it
-	sudo docker build -t slackbot:$(VER) .
+	sudo docker build -t slackbot:$(DOCTAG) .
 
 build: info
 # set binary name and build version into it
