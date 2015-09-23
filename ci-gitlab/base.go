@@ -30,7 +30,7 @@ var (
 	// project ids in gitlab
 	// @TODO make configurable map created from conf/ENV
 	projIDs = map[string]string{
-		"slack-bot": "5",
+		"slackbot": "5",
 	}
 	// Errors
 	ErrProjID = errors.New("project id unknow")
