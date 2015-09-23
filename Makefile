@@ -11,7 +11,7 @@ TIMESTM = `date -u '+%Y-%m-%d_%H:%M:%S%p'`
 FORMAT = v$(VER)-$(COMMIT)-$(TIMESTM)
 
 # @TODO change to ci, testing with local version
-deploy: pack
+deploy-tutum: pack
 	docker tag slackbot:$(VER) tutum.co/mmirolim/slackbot:$(VER)
 	docker push tutum.co/mmirolim/slackbot:$(VER)
 
@@ -23,6 +23,7 @@ build: info
 # set binary name and build version into it
 	CGO_ENABLED=0 godep go build -o $(BIN) -ldflags "-X main.BuildVersion=$(FORMAT)"
 info:
+	git describe --tags
 	go version
 # rm test files binary and out files
 clean:
