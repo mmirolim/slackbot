@@ -98,7 +98,7 @@ func req(proj, ref string) (Resp, error) {
 	// construct project and branch specific url
 	fullUrl := apiUrl + "/projects/" + id + "/refs/" + ref + "/trigger"
 	v := url.Values{}
-	v.Set("token", "2df1de069095cfda2edde54d57ebbe")
+	v.Set("token", apiToken)
 	resp, err := http.PostForm(fullUrl, v)
 	// if ok http result is 201
 	if resp.StatusCode != http.StatusCreated {

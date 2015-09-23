@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	SLACK_BOT_TOKEN = "SLACK_BOT_TOKEN"
+	SLACK_BOT_TOKEN  = "SLACK_BOT_TOKEN"
+	CI_TRIGGER_TOKEN = "CI_TRIGGER_TOKEN"
 )
 
 var (
@@ -31,7 +32,7 @@ func main() {
 
 	fmt.Printf("bot ready, build version: %s\n", BuildVersion)
 	// configure ci gitlab conf
-	ci.Configure("https://gitlab-ci.regium.com", "https://gitlab-ci.regium.com/api/v1", "2df1de069095cfda2edde54d57ebbe")
+	ci.Configure("https://gitlab-ci.regium.com", "https://gitlab-ci.regium.com/api/v1", os.Getenv(CI_TRIGGER_TOKEN))
 	// start listening to messages
 	for {
 		// read each incoming message
