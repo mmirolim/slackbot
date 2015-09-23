@@ -15,8 +15,8 @@ FORMAT = v$(VER)-$(COMMIT)-$(TIMESTM)
 DOCTAG = $(VER)-$(BR)
 # @TODO change to ci, testing with local version
 deploy-tutum: pack
-	docker tag slackbot:$(DOCTAG) tutum.co/mmirolim/slackbot:$(DOCTAG)
-	docker push tutum.co/mmirolim/slackbot:$(DOCTAG)
+	sudo docker tag slackbot:$(DOCTAG) tutum.co/mmirolim/slackbot:$(DOCTAG)
+	sudo docker push tutum.co/mmirolim/slackbot:$(DOCTAG)
 
 pack: info build
 # build docker image from default Dockerfile and tag it
