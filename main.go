@@ -1,7 +1,6 @@
 /*
 Slack bot for automatization purposes
 */
-
 package main
 
 import (
@@ -41,18 +40,18 @@ func main() {
 		if m.Type == "message" && strings.HasPrefix(m.Text, "<@"+id+">") {
 			// if so try to parse if
 			parts := strings.Fields(m.Text)
-			if len(parts) == 4 && parts[1] == ci.TEST {
+			if len(parts) == 4 && parts[1] == ci.CMDTEST {
 				// looks good, get the quote and reply with the result
 				go func(m slack.Msg) {
 					// trigger test action
-					resp, err := ci.Trigger(ci.TEST, parts[2], parts[3])
+					resp, err := ci.Trigger(ci.CMDTEST, parts[2], parts[3])
 					if err != nil {
 						// set error as msg
 						m.Text = "error happened " + err.Error()
 						log.Println("could not trigger ci work", err)
 					} else {
 						// format response
-						m.Text = resp.String()
+						m.Text = resp.Msg()
 					}
 					// send msg to slack
 					if err := slack.PostMsg(ws, m); err != nil {

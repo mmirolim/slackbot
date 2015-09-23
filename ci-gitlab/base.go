@@ -1,3 +1,6 @@
+/*
+Gitlab CI integration package
+*/
 package cigitlab
 
 import (
@@ -12,8 +15,9 @@ import (
 )
 
 const (
-	TEST   = "test"
-	DEPLOY = "deploy"
+	// cmd for ci
+	CMDTEST   = "test"
+	CMDDEPLOY = "deploy"
 )
 
 var (
@@ -45,9 +49,8 @@ type Commit struct {
 }
 
 // implement Stringer interface
-func (r *Resp) String() string {
+func (r *Resp) Msg() string {
 	var obj string
-	obj = fmt.Sprintf("obj empty %v", r)
 	// check if not empty
 	if len(r.Sha) < 7 {
 		return obj
@@ -73,7 +76,7 @@ func Configure(host, api, token string) {
 func Trigger(cmd, proj, ref string) (resp Resp, err error) {
 	switch cmd {
 	// react to test command
-	case TEST:
+	case CMDTEST:
 		resp, err = req(proj, ref)
 		if err != nil {
 			return
