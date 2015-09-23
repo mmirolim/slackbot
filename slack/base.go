@@ -96,16 +96,15 @@ func PostMsg(ws *websocket.Conn, m Msg) error {
 
 // Starts a websocket-based Real Time API session and return the websocket
 // and the ID of the (bot-)user whom the token belongs to.
-func Connect(token string) (*websocket.Conn, string, error) {
+func Connect(token string) (ws *websocket.Conn, id string, err error) {
 	wsurl, id, err := start(token)
 	if err != nil {
-		return nil, "", err
+		return
 	}
-
-	ws, err := websocket.Dial(wsurl, "", SLACK_API_URL)
+	ws, err = websocket.Dial(wsurl, "", SLACK_API_URL)
 	if err != nil {
-		return nil, "", err
+		return
 	}
 
-	return ws, id, err
+	return
 }
