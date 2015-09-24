@@ -33,8 +33,9 @@ var (
 		"slackbot": "5",
 	}
 	// Errors
-	ErrProjID = errors.New("project id unknow")
-	ErrReq    = errors.New("request status is not 200")
+	ErrProjID   = errors.New("project id unknow")
+	ErrReq      = errors.New("request status is not 200")
+	ErrWrongCMD = errors.New("undefined command provided")
 )
 
 type Resp struct {
@@ -83,7 +84,7 @@ func Trigger(cmd, proj, ref string) (resp Resp, err error) {
 		}
 	}
 
-	return
+	return resp, ErrWrongCMD
 }
 
 // construct correct url for gitlab ci trigger
