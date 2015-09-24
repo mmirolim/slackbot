@@ -1,6 +1,9 @@
 clean: 
   script: make clean
-
+  
+test:
+  script: make test
+  
 pack:
   script: make pack
 
@@ -10,6 +13,6 @@ staging:
     - dev
 
 deploy:
-  script: make deploy
+  script: make deploy-tutum
   only:
     - master
