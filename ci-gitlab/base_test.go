@@ -18,7 +18,7 @@ func TestConfigure(t *testing.T) {
 }
 
 // trigger should work only with
-// defined commands
+// defined commands, should return ErrWrongCMD
 func TestTrigger(t *testing.T) {
 	cmd := "dance"
 	_, err := Trigger(cmd, "999", "polka")
