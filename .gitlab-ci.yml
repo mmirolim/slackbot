@@ -1,2 +1,22 @@
-pack:
-  script: make pack
+before_script:
+  - make clean
+
+stages:
+  - unit-test
+  - build
+  - deploy
+
+run-unit-tests:
+  stage: unit-test
+  script:
+    - make test
+
+build-image:
+  stage: build
+  script:
+    - make pack
+
+deploy-tutum:
+ stage: deploy
+ script:
+   - make deploy-tutum

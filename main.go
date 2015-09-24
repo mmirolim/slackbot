@@ -6,28 +6,33 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	ci "./ci-gitlab"
 	"./slack"
 )
 
+const (
+	SLACK_BOT_TOKEN  = "SLACK_BOT_TOKEN"
+	CI_TRIGGER_TOKEN = "CI_TRIGGER_TOKEN"
+)
+
 var (
-	slackToken   = "xoxb-11040115536-GbFpGqoTyaTV67JSEABys4rv"
 	BuildVersion = ""
 )
 
 func main() {
 	// connect to slack via websocket with auth token
-	ws, id, err := slack.Connect(slackToken)
+	ws, id, err := slack.Connect(os.Getenv(SLACK_BOT_TOKEN))
 	if err != nil {
 		// @TODO enable retries or cb in slack package
 		log.Fatal("could not init slack connection", err)
 	}
 
-	fmt.Printf("bot ready, build version: %s", BuildVersion)
+	fmt.Printf("bot ready, build version: %s\n", BuildVersion)
 	// configure ci gitlab conf
-	ci.Configure("https://gitlab-ci.regium.com", "https://gitlab-ci.regium.com/api/v1", "2df1de069095cfda2edde54d57ebbe")
+	ci.Configure("https://gitlab-ci.regium.com", "https://gitlab-ci.regium.com/api/v1", os.Getenv(CI_TRIGGER_TOKEN))
 	// start listening to messages
 	for {
 		// read each incoming message
