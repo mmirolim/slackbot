@@ -22,7 +22,7 @@ func TestConfigure(t *testing.T) {
 func TestTrigger(t *testing.T) {
 	cmd := "dance"
 	_, err := Trigger(cmd, "999", "polka")
-	if err == ErrWrongCMD {
+	if err == ErrProjID {
 		return
 	}
 
