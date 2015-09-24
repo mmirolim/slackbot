@@ -1,18 +1,22 @@
-clean: 
-  script: make clean
-  
-test:
-  script: make test
-  
-pack:
-  script: make pack
+before_script:
+  - make clean
 
-staging:
-  script: make deploy-tutum
-  only:
-    - dev
+stages:
+  - unit-test
+  - build
+  - deploy
 
-deploy:
-  script: make deploy-tutum
-  only:
-    - master
+run-unit-tests:
+  stage: unit-test
+  script:
+    - make test
+
+build-image:
+  stage: build
+  script:
+    - make pack
+
+deploy-tutum:
+ stage: deploy
+ script:
+   - make deploy-tutum

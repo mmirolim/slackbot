@@ -25,7 +25,7 @@ build: info
 # set binary name and build version into it
 	CGO_ENABLED=0 godep go build -o $(BIN) -ldflags "-X main.BuildVersion=$(FORMAT)"
 test: info
-	go test --cover ./...
+	godep go test --cover ./...
 info:
 	git describe --tags
 	go version
