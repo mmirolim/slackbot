@@ -1,6 +1,6 @@
 FROM scratch
 
 ADD ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
-ADD bot ./app
+ADD slackbot ./app
 
 CMD ["./app"]
