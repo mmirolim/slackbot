@@ -1,6 +1,5 @@
 before_script:
   - make clean
-  - make docker-clean
   - make info
 
 stages:
