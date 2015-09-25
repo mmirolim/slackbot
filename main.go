@@ -46,11 +46,11 @@ func main() {
 		if m.Type == "message" && strings.HasPrefix(m.Text, "<@"+id+">") {
 			// if so try to parse if
 			parts := strings.Fields(m.Text)
-			if len(parts) == 4 && parts[1] == ci.CMDTEST {
+			if len(parts) == 4 && parts[1] == ci.CmdTest {
 				// looks good, get the quote and reply with the result
 				go func(m slack.Msg) {
 					// trigger test action
-					resp, err := ci.Trigger(ci.CMDTEST, parts[2], parts[3])
+					resp, err := ci.Trigger(ci.CmdTest, parts[2], parts[3])
 					if err != nil {
 						// set error as msg
 						m.Text = "error happened " + err.Error()

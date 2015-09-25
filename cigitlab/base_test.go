@@ -10,8 +10,8 @@ func TestConfigure(t *testing.T) {
 	Configure(host, api, token)
 	// now try to change them
 	Configure("", "", "")
-	if host != apiHost || api != apiUrl || token != apiToken {
-		t.Errorf("expected variable not set properly or changed: %s %s %S", apiHost, apiUrl, apiToken)
+	if host != apiHost || api != apiURL || token != apiToken {
+		t.Errorf("expected variable not set properly or changed: %s %s %S", apiHost, apiURL, apiToken)
 		return
 	}
 

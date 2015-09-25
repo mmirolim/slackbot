@@ -44,7 +44,7 @@ docker-clean:
 
 # cheking code style, try to stick to google code review style
 lint:
-	golint ./... | grep -v "be unexported"
+	golint ./...
 
 # run unit tests with coverage
 unit-test:
