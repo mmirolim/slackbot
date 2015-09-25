@@ -36,10 +36,10 @@ clean: docker-clean
 # to reduce space usage by docker
 # remove not running containers
 docker-clean:
-	docker rm $(docker ps -a -q)
+	sudo docker rm $(docker ps -a -q)
 # docker images also require space
 # remove old untagged images
-	docker rmi $(docker images -f "dangling=true" -q)
+	sudo docker rmi $(docker images -f "dangling=true" -q)
 
 # cheking code style, try to stick to google code review style
 lint:
