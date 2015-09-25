@@ -1,5 +1,5 @@
 /*
-Gitlab CI integration package
+Package cigitlab is layer for interaction with Gitlab CI API
 */
 package cigitlab
 
@@ -15,16 +15,17 @@ import (
 )
 
 const (
-	// cmd for ci
-	CMDTEST   = "test"
-	CMDDEPLOY = "deploy"
+	// CmdTest command to trigger test action
+	CmdTest = "test"
+	// CmdDeploy command to trigger deploy action
+	CmdDeploy = "deploy"
 )
 
 var (
 	// domain
 	apiHost = ""
 	// part or url
-	apiUrl   = ""
+	apiURL   = ""
 	apiToken = ""
 	once     sync.Once
 	// project ids in gitlab
@@ -32,16 +33,21 @@ var (
 	projIDs = map[string]string{
 		"slackbot": "5",
 	}
-	// Errors
-	ErrProjID   = errors.New("project id unknow")
-	ErrReq      = errors.New("request status is not 200")
+	// ErrProjID if there is no association for between project name and id
+	ErrProjID = errors.New("project id unknow")
+	// ErrReq if post request to CI server return not expected status code
+	ErrReq = errors.New("wrong request status from CI gitlab")
+	// ErrWrongCMD undefined command provided
 	ErrWrongCMD = errors.New("undefined command provided")
 )
 
+// Resp is esponse object from ci server
+// currently only commit unmarshaled from response
 type Resp struct {
 	Commit `json:"commit"`
 }
 
+// Commit object from response object
 type Commit struct {
 	Ref    string
 	Sha    string
@@ -49,7 +55,8 @@ type Commit struct {
 	GitMsg string `json:"git_commit_message"`
 }
 
-// implement Stringer interface
+// Msg returns formated string from resp
+// @TODO better to remove from here
 func (r *Resp) Msg() string {
 	var obj string
 	// check if not empty
@@ -63,21 +70,22 @@ func (r *Resp) Msg() string {
 	return fmt.Sprintf("project-id: %d commit-msg: %s ref: %s %s", r.ProjID, r.GitMsg, r.Ref, link)
 }
 
+// Configure set host, api urls and token of CI
 //@TODO start goroute per project
 func Configure(host, api, token string) {
 	// protect from race
 	once.Do(func() {
 		apiHost = host
-		apiUrl = api
+		apiURL = api
 		apiToken = token
 	})
 }
 
-// trigger particular api in gitlab ci for particular action
+// Trigger particular api in gitlab ci for particular action
 func Trigger(cmd, proj, ref string) (resp Resp, err error) {
 	switch cmd {
 	// react to test command
-	case CMDTEST:
+	case CmdTest:
 		resp, err = req(proj, ref)
 		if err != nil {
 			return
@@ -97,10 +105,10 @@ func req(proj, ref string) (Resp, error) {
 		return ciResp, ErrProjID
 	}
 	// construct project and branch specific url
-	fullUrl := apiUrl + "/projects/" + id + "/refs/" + ref + "/trigger"
+	fullURL := apiURL + "/projects/" + id + "/refs/" + ref + "/trigger"
 	v := url.Values{}
 	v.Set("token", apiToken)
-	resp, err := http.PostForm(fullUrl, v)
+	resp, err := http.PostForm(fullURL, v)
 	// if ok http result is 201
 	if resp.StatusCode != http.StatusCreated {
 		return ciResp, ErrReq

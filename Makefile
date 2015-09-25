@@ -22,6 +22,7 @@ DOCTAG = $(VER)-$(BR)
 # get information for tools
 # and images
 info:
+	make -v
 	sudo docker version --format 'Client: {{ .Client.Version}} Server: {{ .Server.Version }}'
 	godep version
 	go version
@@ -40,6 +41,10 @@ docker-clean:
 # remove old untagged images
 	docker rmi $(docker images -f "dangling=true" -q)
 
+# cheking code style, try to stick to google code review style
+lint:
+	golint ./... | grep -v "be unexported"
+
 # run unit tests with coverage
 unit-test:
 	godep go test -v --cover ./...
@@ -47,6 +52,7 @@ unit-test:
 # set binary name and build version into it
 build:
 	CGO_ENABLED=0 godep go build -v -o $(BIN) -ldflags "-X main.BuildVersion=$(FORMAT)"
+
 # build in golang container
 # for gitlab ci
 build-in-docker:

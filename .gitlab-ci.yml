@@ -1,5 +1,7 @@
 before_script:
   - make clean
+  - make docker-clean
+  - make info
 
 stages:
   - unit-test
@@ -9,12 +11,14 @@ stages:
 run-unit-tests:
   stage: unit-test
   script:
-    - make test
+    - make lint
+    - make unit-test
 
 build-image:
   stage: build
   script:
-    - make pack
+    - make build-in-docker
+    - make build-image
 
 deploy-tutum:
  stage: deploy
