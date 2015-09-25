@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/mmirolim/slack-bot",
+	"ImportPath": "xr/slackbot",
 	"GoVersion": "go1.5.1",
 	"Deps": [
 		{

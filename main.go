@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	ci "./ci-gitlab"
-	"./slack"
+	ci "xr/slackbot/ci-gitlab"
+	"xr/slackbot/slack"
 )
 
 const (
