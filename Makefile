@@ -30,7 +30,7 @@ info:
 	echo "namespace:"$(PRJ) "appname:"$(APP) "binary-name:"$(BIN) "version:"$(FORMAT)
 
 # rm test files binary and out files
-local: docker-clean
+clean: docker-clean
 	rm -f *.test *.out $(BIN)
 
 # to reduce space usage by docker
