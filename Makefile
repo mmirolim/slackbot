@@ -46,9 +46,9 @@ docker-clean:
 lint:
 	golint ./...
 
-# run unit tests with coverage
+# run unit tests with coverage in golang container
 unit-test:
-	godep go test -v --cover ./...
+	sudo docker run --rm -v "$(GOPATH)/bin":/go/bin -v "$(PWD)":/go/src/$(PRJ)/$(APP) -w /go/src/$(PRJ)/$(APP) golang godep go test -v --cover ./...
 
 # set binary name and build version into it
 build:
