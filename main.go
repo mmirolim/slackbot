@@ -34,6 +34,12 @@ func main() {
 	fmt.Printf("bot ready, build version: %s\n", BuildVersion)
 	// configure ci gitlab conf
 	ci.Configure("https://gitlab-ci.regium.com", "https://gitlab-ci.regium.com/api/v1", os.Getenv(ciTriggerToken))
+	// on start send build information
+	msg := slack.Msg{Text: "Hello I am new Wally VER:" + BuildVersion}
+	err = slack.PostMsg(ws, msg)
+	if err != nil {
+		log.Println(err)
+	}
 	// start listening to messages
 	for {
 		// read each incoming message
